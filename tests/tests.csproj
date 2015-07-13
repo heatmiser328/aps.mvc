@@ -60,7 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="database\DatabaseTest.cs" />
+    <Compile Include="database\DatabaseTest.cs" />
     <Compile Include="helpers\Data.cs" />
     <Compile Include="helpers\Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

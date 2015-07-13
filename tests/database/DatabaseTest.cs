@@ -1,80 +1,57 @@
 ﻿using System;
-using System.Text;
-using System.Threading;
 using System.Data;
-using System.Data.Common;
-using System.Data.SqlServerCe;
 
-using NUnit.Framework;
+using Xunit;
+using Shouldly;
 
-using ica.aps.data.factory;
 using ica.aps.data.interfaces;
+using ica.aps.data.db;
 
 namespace Data
 {
-    [TestFixture]
     public class DataTest
     {
-        private const string cDatabaseName = "aps.sdf";
-        private string _connstring;
-
-        [TestFixtureSetUp]
-        public void FixtureSetup()
+        private const string _provider = "System.Data.SqlClient";
+        private const string _connstring = "Data Source=dev-s01;Initial Catalog=aps;User ID=sa;Password=sql@dm1n";
+		
+        [Fact]        
+        public void Instantiate()
         {
-            _connstring = string.Format("Data Source={0}\\{1};password=ica;", TestHelpers.TestPaths.TestDataFolderPath, cDatabaseName);
+			IDatabase db = new Database(_provider, _connstring);
+			db.ShouldNotBe(null);
+			db.IsSqlServerProvider.ShouldBe(true);
+			db.IsSqlServerCeProvider.ShouldBe(false);
+			db.IsOracleProvider.ShouldBe(false);
         }
-
-        [SetUp]
-        public void Setup()
+		
+        [Fact]
+        public void Create()
         {
-            TestHelpers.TestData.ResetBlank(new DBFactory("System.Data.SqlServerCe", _connstring));
+			IDatabase db = new Database(_provider, _connstring);
+            IDbConnection conn = db.Create();
+			conn.ShouldNotBe(null);
+            conn.State.ShouldBe(ConnectionState.Closed);
         }
-
-        [Test]
-        public void CreateConnection()
+		
+        [Fact]
+        public void UseConnection()
         {
-            IDbConnection conn;
-            IDBFactory dbf = new DBFactory("System.Data.SqlServerCe", _connstring);
-
-            conn = dbf.Create();
-
-            Assert.IsNotNull(conn, "failed to create connection");
+			IDatabase db = new Database(_provider, _connstring);
+			using (IDbConnection conn = db.Create())
+			{
+				conn.ShouldNotBe(null);
+                conn.Open();
+                conn.State.ShouldBe(ConnectionState.Open);
+				
+	            using (IDbCommand cmd = conn.CreateCommand())
+	            {
+	                cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES";
+					var count = cmd.ExecuteScalar();
+                    count.ShouldBeAssignableTo<int>();
+                    count.ShouldBe(3);
+	            }
+			}
         }
-
-		/*
-        [Test]
-        public void TestConnection()
-        {
-            DbConnection conn;
-            DbConnection conn1;
-
-            conn = new SqlCeConnection(_connstring);
-            conn1 = new SqlCeConnection(_connstring);
-
-            string cmdText = "SELECT COUNT(*) FROM ";
-
-            DbCommand command = conn.CreateCommand();
-            command.CommandText = cmdText;
-            string temp = "";
-
-            string cmdText1 = "insert LOCATION (LocationID, Description, ModifiedTDS) values(NEWID(), 'desc', getdate())";
-
-            DbCommand command1 = conn1.CreateCommand();
-            command1.CommandText = cmdText1;
-
-
-            conn.Open();
-            conn1.Open();
-            temp = command.ExecuteScalar().ToString();
-            command1.ExecuteNonQuery();
-
-            conn.Close();
-            conn1.Close();
-
-            //Assert.AreEqual("0", );
-            //Assert.AreEqual("0", );
-        }
-		*/
+		
     }
-
 }
