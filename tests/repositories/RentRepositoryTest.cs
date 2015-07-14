@@ -24,12 +24,16 @@ namespace Repositories
 
         public RentRepositoryTest()
         {
+            System.Configuration.ConnectionStringSettings cs = System.Configuration.ConfigurationManager.ConnectionStrings["aps"];
+
             _container = new WindsorContainer();
             _container
                 .Register(Component.For<IDatabase>()
                     .ImplementedBy<Database>()
-                    .DependsOn(Dependency.OnValue("provider", "System.Data.SqlClient"))
-                    .DependsOn(Dependency.OnValue("connectionString", "Data Source=dev-s01;Initial Catalog=aps;User ID=sa;Password=sql@dm1n"))
+                    .DependsOn(Dependency.OnValue("provider", cs.ProviderName))
+                    .DependsOn(Dependency.OnValue("connectionString", cs.ConnectionString))
+                    //.DependsOn(Dependency.OnValue("provider", "System.Data.SqlClient"))
+                    //.DependsOn(Dependency.OnValue("connectionString", "Data Source=dev-s01;Initial Catalog=aps;User ID=sa;Password=sql@dm1n"))
                 )
                 .Register(Component.For<IRentRepository>()
                     .ImplementedBy<RentRepository>()
