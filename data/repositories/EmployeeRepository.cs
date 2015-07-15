@@ -22,7 +22,7 @@ namespace ica.aps.data.repositories
 		#region IEmployeeRepository
         public IList<IEmployee> GetEmployees()
         {
-            IList<Employee> employees = new List<Employee>();
+            IList<IEmployee> employees = new List<IEmployee>();
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
 	            using (IDbCommand cmd = conn.CreateCommand())
@@ -30,9 +30,10 @@ namespace ica.aps.data.repositories
 	                cmd.CommandText = cSelectEmployees_SQL;
 	                using (IDataReader dr = cmd.ExecuteReader())
 	                {
-						employees = ORM.FillCollection<Employee, List<Employee>>(dr, (employee, dr) => {
-							employee.Rents = rrepo.GetRents(employee);
+                        List<Employee> l = ORM.FillCollection<Employee, List<Employee>>(dr, (employee, row) => {                            
+                            employee.Rents = _rrepo.GetRents(employee);
 						});
+                        employees = l.ConvertAll<IEmployee>(x => x);
 	                }
 	            }
 			}

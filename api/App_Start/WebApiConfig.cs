@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace api
+namespace ica.aps.api
 {
     public static class WebApiConfig
     {

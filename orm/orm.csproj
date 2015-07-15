@@ -7,8 +7,8 @@
     <ProjectGuid>{008965B5-C745-4CCF-B96E-AA722DDF56C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>orm</RootNamespace>
-    <AssemblyName>orm</AssemblyName>
+    <RootNamespace>ica.aps.orm</RootNamespace>
+    <AssemblyName>ica.aps.orm</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
