@@ -34,17 +34,21 @@ namespace ica.aps.api
                     .DependsOn(Dependency.OnValue("provider", cs.ProviderName))
                     .DependsOn(Dependency.OnValue("connectionString", cs.ConnectionString))
                 )
+                //.Register(Component.For<IUserRepository>()
+                //    .ImplementedBy<UserRepository>()
+                //)
                 .Register(Component.For<IEmployeeRepository>()
                     .ImplementedBy<EmployeeRepository>()
-                    //.DependsOn(Dependency.OnComponent<IRentRepository, RentRepository>())
+                //.DependsOn(Dependency.OnComponent<IRentRepository, RentRepository>())
                 )
                 .Register(Component.For<IRentRepository>()
                     .ImplementedBy<RentRepository>()
                 )
 
-                .Register(Component.For<EmployeeController>()
+                //.Register(Component.For<EmployeeController>()
                     //.DependsOn(Dependency.OnComponent<IEmployeeRepository, EmployeeRepository>())
-                );                
+                //)
+                ;
         }
 
         protected void Application_Start()        

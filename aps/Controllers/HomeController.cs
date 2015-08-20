@@ -8,9 +8,9 @@ namespace aps.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(string returnUrl)
+        [Authorize]
+        public ActionResult Index()
         {
-            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
     }

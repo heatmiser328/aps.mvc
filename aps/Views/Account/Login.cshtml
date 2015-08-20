@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Alfred's Payroll Login</title>
+    <meta name="viewport" content="width=device-width" />    
+    @Styles.Render("~/Content/css")
+</head>
+<body ng-app="apsLogin">
+    <div ui-view></div>
+
+    <script type="text/ng-template" id="login">
+        <form id="formLogin" ng-submit="login()">
+            <div>
+                <label for="loginUserName">Email Address</label>
+                <input id="loginUserName" type="text" ng-model="username" required/>
+            </div>
+            <div>
+                <label for="loginPassword">Password</label>
+                <input id="loginPassword" type="password" ng-model="password" required/>
+            </div>
+            <div>
+                <label for="loginRemember">Remember me</label>
+                <input id="loginRemember" type="checkbox" ng-model="remember" required />
+            </div>
+            <div>
+                <button id="loginSubmit" type="submit">Login</button>
+            </div>
+        </form>
+    </script>
+
+    @Scripts.Render("~/bundles/angularjs")
+    <!--@Scripts.Render("~/bundles/apsLogin")-->
+    <script type="text/javascript" src="~/Scripts/account/login.js"></script>
+</body>
+</html>
