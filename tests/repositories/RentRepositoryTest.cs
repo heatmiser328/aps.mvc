@@ -55,16 +55,16 @@ namespace Repositories
         {            
         	IRentRepository rr = _container.Resolve<IRentRepository>();
 			IEmployee employee = new Employee {
-                ID = _employeeID
+                EmployeeID = _employeeID
 			};
-            IList<IRent> rents = rr.GetRents(employee);
+            var rents = rr.GetRents(employee);
             rents.ShouldNotBe(null);
             rents.ShouldNotBeEmpty();            
 			
 			IRent rent = rents.First();
             rent.ShouldNotBe(null);
             rent.RentPct.ShouldBe(0.83M);
-            rent.EffectiveDate.ShouldBe(DateTime.Parse("2000-01-01 00:00:00.000"));
+            rent.EffectiveTDS.ShouldBe(DateTime.Parse("2000-01-01 00:00:00.000"));
         }
 
 		/*        

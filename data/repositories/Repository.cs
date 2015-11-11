@@ -65,30 +65,6 @@ namespace ica.aps.data.repositories
 
             return param;
         }
-
-        /// <summary>
-        /// Get
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dr"></param>
-        /// <param name="colname"></param>
-        /// <returns>Value for column</returns>
-           
-		protected T Get<T>(IDataReader dr, string colname)
-		{
-			if (dr[colname] != System.DBNull.Value)
-				return (T) dr[colname];
-			return default(T);
-			
-		}
-		/*
-		protected short RetrieveShort(IDataReader dr, string colname)
-		{
-			if (dr[colname] != System.DBNull.Value)
-				return Convert.ToInt16(dr[colname]);
-			return 0;
-		}
-		*/
 	}
 }
 

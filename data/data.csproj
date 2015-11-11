@@ -36,8 +36,12 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,28 +53,20 @@
     <Compile Include="interfaces\IDailyGrossRepository.cs" />
     <Compile Include="interfaces\IDatabase.cs" />
     <Compile Include="interfaces\IEmployeeRepository.cs" />
-    <Compile Include="interfaces\IPayrollRepository.cs" />
     <Compile Include="interfaces\IRentRepository.cs" />
+    <Compile Include="models\DailyGross.cs" />
+    <Compile Include="models\Employee.cs" />
+    <Compile Include="models\EmployeePayroll.cs" />
+    <Compile Include="models\Payroll.cs" />
+    <Compile Include="models\Rent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="repositories\DailyGrossRepository.cs" />
+    <Compile Include="repositories\DailyGrossRepository.cs" />
     <Compile Include="repositories\EmployeeRepository.cs" />
-    <Content Include="repositories\PayrollRepository.cs" />
     <Compile Include="repositories\RentRepository.cs" />
     <Compile Include="repositories\Repository.cs" />
     <Content Include="schema\aps.sql" />
     <Content Include="schema\aps_seed.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\core\core.csproj">
-      <Project>{563d855f-b1dd-4aa2-bfe4-072cfcb73fb3}</Project>
-      <Name>core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\orm\orm.csproj">
-      <Project>{008965b5-c745-4ccf-b96e-aa722ddf56c1}</Project>
-      <Name>orm</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

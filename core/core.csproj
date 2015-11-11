@@ -33,25 +33,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="interfaces\IDailyGross.cs" />
-    <Compile Include="interfaces\IEmployee.cs" />
-    <Compile Include="interfaces\IEmployeePayroll.cs" />
-    <Compile Include="interfaces\IPayroll.cs" />
-    <Compile Include="interfaces\IRent.cs" />
-    <Compile Include="models\DailyGross.cs" />
-    <Compile Include="models\Employee.cs" />
-    <Compile Include="models\EmployeePayroll.cs" />
-    <Compile Include="models\Payroll.cs" />
-    <Compile Include="models\Rent.cs" />
+    <Compile Include="interfaces\IPayrollManager.cs" />
+    <Compile Include="managers\PayrollManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\orm\orm.csproj">
-      <Project>{008965b5-c745-4ccf-b96e-aa722ddf56c1}</Project>
-      <Name>orm</Name>
+    <ProjectReference Include="..\data\data.csproj">
+      <Project>{f71eb06d-7d7d-430e-a849-649e713e3d19}</Project>
+      <Name>data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

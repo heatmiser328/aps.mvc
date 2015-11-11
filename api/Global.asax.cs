@@ -9,11 +9,14 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
 
 using ica.aps.api.Controllers;
 using ica.aps.data.db;
 using ica.aps.data.interfaces;
 using ica.aps.data.repositories;
+using ica.aps.core.interfaces;
+using ica.aps.core.managers;
 
 namespace ica.aps.api
 {    
@@ -25,42 +28,71 @@ namespace ica.aps.api
         private readonly IWindsorContainer container;
 
         public WebApiApplication() 
-        {
-            System.Configuration.ConnectionStringSettings cs = System.Configuration.ConfigurationManager.ConnectionStrings["aps"];
-
-            this.container = new WindsorContainer()
-                .Register(Component.For<IDatabase>()
-                    .ImplementedBy<Database>()
-                    .DependsOn(Dependency.OnValue("provider", cs.ProviderName))
-                    .DependsOn(Dependency.OnValue("connectionString", cs.ConnectionString))
-                )
-                //.Register(Component.For<IUserRepository>()
-                //    .ImplementedBy<UserRepository>()
-                //)
-                .Register(Component.For<IEmployeeRepository>()
-                    .ImplementedBy<EmployeeRepository>()
-                //.DependsOn(Dependency.OnComponent<IRentRepository, RentRepository>())
-                )
-                .Register(Component.For<IRentRepository>()
-                    .ImplementedBy<RentRepository>()
-                )
-
-                //.Register(Component.For<EmployeeController>()
-                    //.DependsOn(Dependency.OnComponent<IEmployeeRepository, EmployeeRepository>())
-                //)
-                ;
+        {            
+            this.container = new WindsorContainer();
         }
 
-        protected void Application_Start()        
+        protected void Application_Start()                
         {
-            GlobalConfiguration.Configuration.Services.Replace(
-                typeof(IHttpControllerActivator),
-                new WindsorCompositionRoot(this.container));
+            try
+            {
+                /*             
+                GlobalConfiguration.Configuration.Services.Replace(
+                    typeof(IHttpControllerActivator),
+                    new WindsorCompositionRoot(this.container));
+                */
+                //var container = new WindsorContainer();
+                this.container.Install(FromAssembly.This());
+                var dr = new CastleWindsor.DependencyResolver(this.container.Kernel);
+                GlobalConfiguration.Configuration.DependencyResolver = dr;
 
-            AreaRegistration.RegisterAllAreas();
+                System.Configuration.ConnectionStringSettings cs = System.Configuration.ConfigurationManager.ConnectionStrings["aps"];
+                this.container
+                    .Register(Component.For<IDatabase>()
+                        .ImplementedBy<Database>()
+                        .DependsOn(Dependency.OnValue("provider", cs.ProviderName))
+                        .DependsOn(Dependency.OnValue("connectionString", cs.ConnectionString))
+                    )
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+                    //.Register(Component.For<IUserRepository>()
+                    //    .ImplementedBy<UserRepository>()
+                    //)
+                    .Register(Component.For<IEmployeeRepository>()
+                        .ImplementedBy<EmployeeRepository>()
+                    //.DependsOn(Dependency.OnComponent<IRentRepository, RentRepository>())
+                    )
+                    .Register(Component.For<IRentRepository>()
+                        .ImplementedBy<RentRepository>()
+                    )
+                    .Register(Component.For<IDailyGrossRepository>()
+                        .ImplementedBy<DailyGrossRepository>()
+                    )
+
+                    .Register(Component.For<IPayrollManager>()
+                        .ImplementedBy<PayrollManager>()
+                    )
+
+                    /*
+                    .Register(Component.For<PayrollController>()
+                        .DependsOn(Dependency.OnComponent<IPayrollRepository, PayrollRepository>())
+                    )
+
+                    .Register(Component.For<EmployeeController>()
+                        .DependsOn(Dependency.OnComponent<IEmployeeRepository, EmployeeRepository>())
+                    )
+                    */
+                    ;
+
+                AreaRegistration.RegisterAllAreas();
+
+                WebApiConfig.Register(GlobalConfiguration.Configuration);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
+
 
         public override void Dispose()
         {

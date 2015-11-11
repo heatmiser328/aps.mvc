@@ -1,5 +1,5 @@
 ﻿angular.module('apsLogin', ['ui.router'])
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
     .state('loginApp', {
         url: '/',
@@ -9,7 +9,7 @@
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/');
-})
+}])
 .controller('LoginCtrl', ['$scope', '$log', '$window', '$http', function ($scope, $log, $window, $http) {
 
     $scope.login = function () {

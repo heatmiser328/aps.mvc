@@ -12,7 +12,7 @@
     <script type="text/ng-template" id="login">
         <form id="formLogin" ng-submit="login()">
             <div>
-                <label for="loginUserName">Email Address</label>
+                <label for="loginUserName">User Name</label>
                 <input id="loginUserName" type="text" ng-model="username" required/>
             </div>
             <div>
@@ -21,7 +21,7 @@
             </div>
             <div>
                 <label for="loginRemember">Remember me</label>
-                <input id="loginRemember" type="checkbox" ng-model="remember" required />
+                <input id="loginRemember" type="checkbox" ng-model="remember" />
             </div>
             <div>
                 <button id="loginSubmit" type="submit">Login</button>
@@ -29,8 +29,8 @@
         </form>
     </script>
 
-    @Scripts.Render("~/bundles/angularjs")
-    <!--@Scripts.Render("~/bundles/apsLogin")-->
-    <script type="text/javascript" src="~/Scripts/account/login.js"></script>
+    @Scripts.Render("~/bundles/angularjs")                     
+    @Scripts.Render("~/bundles/apsLogin")
+    <!--script type="text/javascript" src="~/Scripts/account/login.js"></script-->
 </body>
 </html>

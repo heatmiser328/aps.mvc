@@ -1,11 +1,36 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Alfred's Payroll System</title>
+    <title>Alfred's Payroll System</title>    
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
 </head>
-<body>
-    <h1>APS</h1>
+<body ng-app="apsApp">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <span><img src="Images/barberpole.jpg" height="30" />Alfred's Barbershop</span>
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/payroll">Payroll</a></li>
+                <li><a href="/employees">Employees</a></li>
+                <li><a href="/logout">Logout <span><i><b>@ViewBag.UserName</b></i></span></a></li>
+            </ul>
+        </div>
+    </nav>
 
-    @Scripts.Render("~/bundles/aps")
+    <div ui-view></div>
+
+    <!--
+    <footer>
+        <small>ICA @ViewBag.Copyright</small>
+    </footer>
+    -->                
+    @Html.Partial("~/Views/Home/_Payroll.cshtml")    
+    @Scripts.Render("~/bundles/angularjs")    
+    @Scripts.Render("~/bundles/vendorjs")    
+    @Scripts.Render("~/bundles/aps")            
 </body>
 </html>

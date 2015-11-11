@@ -2,10 +2,9 @@
 using System.Data;
 using System.Collections.Generic;
 
-using ica.aps.core.interfaces;
-using ica.aps.core.models;
+using ica.aps.data.models;
 using ica.aps.data.interfaces;
-using ica.aps.orm;
+using Dapper;
 
 namespace ica.aps.data.repositories
 {
@@ -20,25 +19,17 @@ namespace ica.aps.data.repositories
         }
 	
 		#region IEmployeeRepository
-        public IList<IEmployee> GetEmployees()
-        {
-            IList<IEmployee> employees = new List<IEmployee>();
+        public IEnumerable<Employee> GetEmployees()
+        {            
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
-	            using (IDbCommand cmd = conn.CreateCommand())
-	            {
-	                cmd.CommandText = cSelectEmployees_SQL;
-	                using (IDataReader dr = cmd.ExecuteReader())
-	                {
-                        List<Employee> l = ORM.FillCollection<Employee, List<Employee>>(dr, (employee, row) => {                            
-                            employee.Rents = _rrepo.GetRents(employee);
-						});
-                        employees = l.ConvertAll<IEmployee>(x => x);
-	                }
-	            }
-			}
-
-            return employees;
+                var list = conn.Query<Employee>(cSelectEmployees_SQL);
+                foreach (Employee e in list) 
+                {                    
+                    e.Rents = _rrepo.GetRents(e);                    
+                }
+                return list;
+			}            
         }
         #endregion
 

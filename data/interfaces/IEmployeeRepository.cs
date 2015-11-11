@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ica.aps.core.interfaces;
+using ica.aps.data.models;
 
 namespace ica.aps.data.interfaces
 {
     public interface IEmployeeRepository
     {
-        IList<IEmployee> GetEmployees();
+        IEnumerable<Employee> GetEmployees();
     }
 }

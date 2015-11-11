@@ -2,10 +2,9 @@
 using System.Data;
 using System.Collections.Generic;
 
-using ica.aps.core.interfaces;
-using ica.aps.core.models;
+using ica.aps.data.models;
 using ica.aps.data.interfaces;
-using ica.aps.orm;
+using Dapper;
 
 namespace ica.aps.data.repositories
 {						  
@@ -17,34 +16,25 @@ namespace ica.aps.data.repositories
         }
 	
 		#region IDailyGrossRepository
-        public IList<IDailyGross> GetDailyGrosses(IEmployee employee, DateTime start, DateTime end)
+        public IEnumerable<DailyGross> GetDailyGrosses(Employee employee, DateTime start, DateTime end)
         {
-            IList<DailyGross> grosses = new List<DailyGross>();
+            var grosses = new List<DailyGross>();
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
-	            using (IDbCommand cmd = conn.CreateCommand())
-	            {
-					IRent r = employee.EffectiveRent(start);
-					
-	                cmd.CommandText = cSelectDailyGrossesForEmployee_SQL;
-	                base.AddCommandParameter(cmd, "@RentID", DbType.Guid, ParameterDirection.Input, r.ID);
-	                base.AddCommandParameter(cmd, "@StartTDS", DbType.DateTime, ParameterDirection.Input, start);
-	                base.AddCommandParameter(cmd, "@EndTDS", DbType.DateTime, ParameterDirection.Input, end);
-						
-	                using (IDataReader dr = cmd.ExecuteReader())
-	                {
-						grosses = ORM.FillCollection<DailyGross, IList<DailyGross>>(dr);
-	                }
-	            }
+                Rent r = employee.EffectiveRent(start);
+                var list = conn.Query<DailyGross>(cSelectDailyGrossesForEmployee_SQL, new {
+                    RentID = r.RentID, StartTDS = start, EndTDS = end
+                });
 			}
 
             return grosses;
         }
 
-        public void InsertDailyGross(IEmployee employee, IDailyGross dg)
+        public void InsertDailyGross(Employee employee, DailyGross dg)
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
+                /*
 	            using (IDbCommand cmd = conn.CreateCommand())
 	            {
 					dg.ID = Guid.NewGuid();
@@ -60,13 +50,15 @@ namespace ica.aps.data.repositories
 						
 					cmd.ExecuteNonQuery();
 	            }
+                */ 
 			}
         }
 	
-        public void UpdateDailyGross(IEmployee employee, IDailyGross dg)
+        public void UpdateDailyGross(Employee employee, DailyGross dg)
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
+                /*
 	            using (IDbCommand cmd = conn.CreateCommand())
 	            {
 					IRent r = employee.EffectiveRent(dg.GrossDate);
@@ -81,6 +73,7 @@ namespace ica.aps.data.repositories
 						
 					cmd.ExecuteNonQuery();
 	            }
+                */ 
 			}
         }
         #endregion

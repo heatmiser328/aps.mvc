@@ -4,27 +4,31 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
-using ica.aps.data.interfaces;
+using ica.aps.core.interfaces;
+
 
 namespace ica.aps.api.Controllers
 {
-    public class EmployeeController : ApiController
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    public class PayrollController : ApiController
     {
-        private IEmployeeRepository _repos;
+        private IPayrollManager _mgr;
 
-        public EmployeeController(IEmployeeRepository repos)
+        public PayrollController(IPayrollManager mgr)
         {
-            _repos = repos;
+            _mgr = mgr;
         }
 
-        // GET api/employee
-        public HttpResponseMessage Get()
+        // GET api/payroll/start/{startDate}
+        [HttpGet]
+        public HttpResponseMessage Get(DateTime startDate)
         {
             try
             {
-                var list = _repos.GetEmployees();
-                return Request.CreateResponse(HttpStatusCode.OK, list, "application/json");
+                var payroll = _mgr.GetPayroll(startDate);
+                return Request.CreateResponse(HttpStatusCode.OK, payroll, "application/json");
             }
             catch (Exception ex)
             {
@@ -32,30 +36,30 @@ namespace ica.aps.api.Controllers
                 throw new HttpResponseException(
                     new HttpResponseMessage(HttpStatusCode.BadRequest)
                     {
-                        Content = new StringContent("Error retrieving Employees" + System.Environment.NewLine + ex.Message),
+                        Content = new StringContent("Error retrieving Payroll" + System.Environment.NewLine + ex.Message),
                         ReasonPhrase = ex.Message.Replace(System.Environment.NewLine, string.Empty)
                     }
                 );
             }
         }
 
-        // GET api/employee/5
+        // GET api/payroll/5
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/employee
+        // POST api/payroll
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT api/employee/5
+        // PUT api/payroll/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/employee/5
+        // DELETE api/payroll/5
         public void Delete(int id)
         {
         }
