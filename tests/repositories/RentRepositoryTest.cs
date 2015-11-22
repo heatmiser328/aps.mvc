@@ -8,8 +8,7 @@ using Castle.Windsor;
 using Xunit;
 using Shouldly;
 
-using ica.aps.core.interfaces;
-using ica.aps.core.models;
+using ica.aps.data.models;
 using ica.aps.data.db;
 using ica.aps.data.interfaces;
 using ica.aps.data.repositories;
@@ -40,6 +39,7 @@ namespace Repositories
                 );
 
             IDatabase db = _container.Resolve<IDatabase>();
+            TestHelpers.TestData.ResetBlank(db);
             using (IDbConnection conn = db.Create())
             {
                 conn.Open();
@@ -51,17 +51,17 @@ namespace Repositories
         }
         
         [Fact]
-        public void GetRents_Default()
+        public void Get()
         {            
         	IRentRepository rr = _container.Resolve<IRentRepository>();
-			IEmployee employee = new Employee {
+			var employee = new Employee {
                 EmployeeID = _employeeID
 			};
-            var rents = rr.GetRents(employee);
+            var rents = rr.Get(employee);
             rents.ShouldNotBe(null);
             rents.ShouldNotBeEmpty();            
 			
-			IRent rent = rents.First();
+			var rent = rents.First();
             rent.ShouldNotBe(null);
             rent.RentPct.ShouldBe(0.83M);
             rent.EffectiveTDS.ShouldBe(DateTime.Parse("2000-01-01 00:00:00.000"));

@@ -19,14 +19,14 @@ namespace ica.aps.data.repositories
         }
 	
 		#region IEmployeeRepository
-        public IEnumerable<Employee> GetEmployees()
+        public IEnumerable<Employee> Get()
         {            
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
                 var list = conn.Query<Employee>(cSelectEmployees_SQL);
                 foreach (Employee e in list) 
                 {                    
-                    e.Rents = _rrepo.GetRents(e);                    
+                    e.Rents = _rrepo.Get(e);                    
                 }
                 return list;
 			}            

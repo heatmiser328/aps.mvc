@@ -37,7 +37,7 @@ namespace ica.aps.data.models
         {
             get 
             {
-                return this.Grosses.Sum(g => g.GrossPay);                
+                return this.Grosses.Sum(g => g.Gross);
             }
         }
 

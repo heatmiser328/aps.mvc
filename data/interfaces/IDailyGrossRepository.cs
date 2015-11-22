@@ -7,8 +7,8 @@ namespace ica.aps.data.interfaces
 {						  
     public interface IDailyGrossRepository
     {
-        IEnumerable<DailyGross> GetDailyGrosses(Employee employee, DateTime start, DateTime end);
-        void InsertDailyGross(Employee employee, DailyGross dg);
-        void UpdateDailyGross(Employee employee, DailyGross dg);
+        IEnumerable<DailyGross> Get(Employee employee, DateTime start, DateTime end);
+        void Insert(Employee employee, DailyGross dg);
+        void Update(Employee employee, DailyGross dg);
     }
 }

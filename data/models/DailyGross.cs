@@ -9,9 +9,9 @@ namespace ica.aps.data.models
     {
         public Guid? DailyGrossID { get; set; }        
         [DataMember]
-        public DateTime GrossDate { get; set; }
+        public DateTime GrossTDS { get; set; }
         [DataMember]
-        public decimal GrossPay { get; set; }
+        public decimal Gross { get; set; }
         [DataMember]
         public DateTime Modified { get; set; }
         [DataMember]

@@ -33,7 +33,20 @@ namespace TestHelpers
             }
         }
 
+        internal static string SchemaFolderPath
+        {
+            get
+            {
+                if (_schemafolderpath == null)
+                {
+                    _schemafolderpath = Path.Combine(TestFolderPath, "..", "data", "schema");
+                }
+                return _schemafolderpath;
+            }
+        }
+
         private static string _testfolderpath = null;
         private static string _testdatafolderpath = null;
+        private static string _schemafolderpath = null;
 	}
 }

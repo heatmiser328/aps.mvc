@@ -35,6 +35,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeEx.cs" />
     <Compile Include="interfaces\IPayrollManager.cs" />
     <Compile Include="managers\PayrollManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

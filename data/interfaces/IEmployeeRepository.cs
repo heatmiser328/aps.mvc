@@ -7,6 +7,6 @@ namespace ica.aps.data.interfaces
 {
     public interface IEmployeeRepository
     {
-        IEnumerable<Employee> GetEmployees();
+        IEnumerable<Employee> Get();
     }
 }

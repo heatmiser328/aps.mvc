@@ -39,6 +39,10 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.8.2.0\lib\net45\NSubstitute.dll</HintPath>
     </Reference>
@@ -66,16 +70,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="api\EmployeeTest.cs" />
+    <Content Include="api\EmployeeTest.cs" />
+    <Compile Include="core\DateTimeExTest.cs" />
     <Compile Include="database\DatabaseTest.cs" />
     <Compile Include="helpers\Data.cs" />
     <Compile Include="helpers\Paths.cs" />
     <Compile Include="mocks\MockData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="repositories\EmployeeRepositoryTest.cs" />
+    <Compile Include="repositories\DailyGrossRepositoryTest.cs" />
     <Compile Include="repositories\RentRepositoryTest.cs" />
+    <Content Include="aps_seed.sql" />
+    <Content Include="data\aps_seed.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="data\aps.bak" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

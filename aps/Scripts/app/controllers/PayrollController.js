@@ -13,8 +13,14 @@
     };
     $scope.date = new Date();
 
+    function padZero(v) {
+        if (v.length < 2) {
+            return '0' + v;
+        }
+        return v;
+    }
     function load() {
-        var date = $scope.date.getFullYear() + '-' + ($scope.date.getMonth() + 1) + '-0' + $scope.date.getDate();
+        var date = $scope.date.getFullYear() + '-' + ($scope.date.getMonth() + 1) + '-' + padZero($scope.date.getDate());
                 
         PayrollService.fetch(date)
         .then(function (data) {
@@ -22,19 +28,21 @@
             $log.debug(data);
             
             $scope.gridOptions.columnDefs = [
+               { name: 'id', enableCellEdit: false, visible: false},
                { name: 'name', enableCellEdit: false }
             ];
             
             var payroll = _.map(data.Employees, function (emp, j) {
                 var o = {
+                    id: j,
                     name: emp.Employee.FullName,
                 };
                 _.each(emp.Grosses, function (g, i) {
                     if (j == 0) {
-                        var s = $filter('date')(g.GrossDate, 'MMM-dd');
+                        var s = $filter('date')(g.GrossTDS, 'MMM-dd');                        
                         $scope.gridOptions.columnDefs.push({ name: i.toString(), displayName: s, enableCellEdit: true, type: 'number' });
                     }
-                    o[i.toString()] = g.GrossPay;
+                    o[i.toString()] = g.Gross;
                 });
                 o.gross = emp.Gross;
                 o.net = emp.Net;

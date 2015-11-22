@@ -23,7 +23,7 @@ namespace ica.aps.api.Controllers
         {
             try
             {
-                var list = _repos.GetEmployees();
+                var list = _repos.Get();
                 return Request.CreateResponse(HttpStatusCode.OK, list, "application/json");
             }
             catch (Exception ex)

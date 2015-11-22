@@ -16,7 +16,7 @@ namespace ica.aps.data.repositories
         }
 	
         #region IRentRepository
-        public IEnumerable<Rent> GetRents(Employee employee)
+        public IEnumerable<Rent> Get(Employee employee)
         {            
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{

@@ -1,13 +1,27 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 
+using Dapper;
 using ica.aps.data.interfaces;
+using ica.aps.data.models;
 
 namespace TestHelpers
 {
     internal static class TestData
     {
+        internal static Employee GetEmployee(IDatabase db, string name)
+        {
+            using (IDbConnection conn = db.Create())
+            {
+                conn.Open();
+                Employee employee = conn.Query<Employee>("SELECT * FROM Employee WHERE FirstName = '" + name + "'").First();
+                employee.Rents = conn.Query<Rent>("SELECT * FROM Rent WHERE EmployeeID = @ID", new { ID = employee.EmployeeID });
+                return employee;
+            }
+
+        }
 
         internal static void ResetBlank(IDatabase db)
         {
@@ -26,24 +40,28 @@ namespace TestHelpers
                 {
                     conn.Open();
 
+                    conn.ChangeDatabase("master");
+                    conn.Execute("DROP DATABASE aps");
+                    conn.Execute("CREATE DATABASE aps");
+
+                    /*
                     string sql = string.Format(@"RESTORE DATABASE {0} FROM DISK = '{1}' WITH REPLACE",
                                                 conn.Database,
                                                 Path.Combine(TestHelpers.TestPaths.TestDataFolderPath, "aps.bak"));
                     // change to master
                     conn.ChangeDatabase("master");
                     // perform restore
-		            using (IDbCommand cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.ExecuteNonQuery();
-                    }
+                    conn.Execute(sql);
+                    */
                 }
             }
         }
 
         internal static void Reset(IDatabase db)
         {
-            Reset(db, ".sql");
+            ResetBlank(db);
+            ExecuteScript(db, Path.Combine(TestHelpers.TestPaths.SchemaFolderPath, "aps.sql"));
+            ExecuteScript(db, Path.Combine(TestHelpers.TestPaths.TestDataFolderPath, "aps_seed.sql"));
         }
 
         internal static void Reset(IDatabase db, string sqlscript)
@@ -59,7 +77,7 @@ namespace TestHelpers
             using (StreamReader reader = new StreamReader(scriptfile))
             {
                 string sqlscript = reader.ReadToEnd();
-                string[] commands = sqlscript.Split(new string[] { "GO", "Go", "gO", "go", ";" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] commands = sqlscript.Split(new string[] { "GO", "Go", "gO", "go"/*, ";" */}, StringSplitOptions.RemoveEmptyEntries);
                 if (commands != null && commands.Length > 0)
                 {
                     using (IDbConnection conn = db.Create())
@@ -71,21 +89,17 @@ namespace TestHelpers
                                  command != ";" && 
                                  string.Compare(command, "go", true) != 0)
                             {
-                                using (IDbCommand cmd = conn.CreateCommand())
+                                try
                                 {
-                                    try
+                                    //System.Diagnostics.Trace.Write(command);
+                                    conn.Execute(command);
+                                }
+                                catch (Exception ex)
+                                {
+                                    while (ex != null)
                                     {
-                                        //System.Diagnostics.Trace.Write(command);
-                                        cmd.CommandText = command;
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        while (ex != null)
-                                        {
-                                            System.Diagnostics.Trace.Write(ex.Message);
-                                            ex = ex.InnerException;
-                                        }
+                                        System.Diagnostics.Trace.Write(ex.Message);
+                                        ex = ex.InnerException;
                                     }
                                 }
                             }
@@ -100,12 +114,7 @@ namespace TestHelpers
             using (IDbConnection conn = db.Create())
             {
                 conn.Open();
-                using (IDbCommand cmd = conn.CreateCommand())
-                {
-                    //System.Diagnostics.Trace.Write(sql);
-                    cmd.CommandText = sql;
-                    cmd.ExecuteNonQuery();
-                }
+                conn.Execute(sql);
             }
         }
 
@@ -117,13 +126,7 @@ namespace TestHelpers
                 IDbTransaction trans = conn.BeginTransaction();
                 foreach (string sql in sqlcmds)
                 {
-                    //System.Diagnostics.Trace.Write(sql);
-                    using (IDbCommand cmd = conn.CreateCommand())
-                    {
-                        cmd.Transaction = trans;
-                        cmd.CommandText = sql;
-                        cmd.ExecuteNonQuery();
-                    }
+                    conn.Execute(sql, null, trans);
                 }
                 trans.Commit();
             }
@@ -134,6 +137,7 @@ namespace TestHelpers
             using (IDbConnection conn = db.Create())
             {
                 conn.Open();
+
                 using (IDbCommand cmd = conn.CreateCommand())
                 {
                     //System.Diagnostics.Trace.Write(sql);

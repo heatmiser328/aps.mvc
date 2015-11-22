@@ -16,21 +16,19 @@ namespace ica.aps.data.repositories
         }
 	
 		#region IDailyGrossRepository
-        public IEnumerable<DailyGross> GetDailyGrosses(Employee employee, DateTime start, DateTime end)
-        {
-            var grosses = new List<DailyGross>();
+        public IEnumerable<DailyGross> Get(Employee employee, DateTime start, DateTime end)
+        {            
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
                 Rent r = employee.EffectiveRent(start);
-                var list = conn.Query<DailyGross>(cSelectDailyGrossesForEmployee_SQL, new {
+                return conn.Query<DailyGross>(cSelectDailyGrossesForEmployee_SQL, new {
                     RentID = r.RentID, StartTDS = start, EndTDS = end
                 });
 			}
-
-            return grosses;
+         
         }
 
-        public void InsertDailyGross(Employee employee, DailyGross dg)
+        public void Insert(Employee employee, DailyGross dg)
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
@@ -54,7 +52,7 @@ namespace ica.aps.data.repositories
 			}
         }
 	
-        public void UpdateDailyGross(Employee employee, DailyGross dg)
+        public void Update(Employee employee, DailyGross dg)
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{

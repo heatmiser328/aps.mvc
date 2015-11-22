@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ica.aps.core;
 using ica.aps.core.interfaces;
 using ica.aps.data.interfaces;
 using ica.aps.data.models;
@@ -24,29 +25,25 @@ namespace ica.aps.core.managers
 		#region IPayrollManager
         public IEnumerable<Employee> GetEmployees()
         {
-			return _emprepos.GetEmployees();
+			return _emprepos.Get();
         }
 
         public Payroll GetPayroll(DateTime dt)
         {
-            int offset = (int)dt.DayOfWeek - (int)System.DayOfWeek.Monday;
-            int diff = (int)System.DayOfWeek.Saturday - (int)System.DayOfWeek.Monday;
-
-			DateTime start = dt - new TimeSpan(offset, 0, 0, 0, 0);
-            DateTime end = start.AddDays(diff);
+            var ww = dt.WorkWeek();
 
 			Payroll payroll = new Payroll {
-				StartTDS = start,
-				EndTDS = end,
+				StartTDS = ww.Start,
+				EndTDS = ww.End,
 				Employees = new List<EmployeePayroll>()
 			};
 			
-            var employees = _emprepos.GetEmployees();            
+            var employees = _emprepos.Get();            
 			foreach (Employee emp in employees)
 			{
-                EmployeePayroll pr = new EmployeePayroll(emp, start);                
+                EmployeePayroll pr = new EmployeePayroll(emp, ww.Start);                
                 //pr.Rent = emp.EffectiveRent(start);                
-                pr.Grosses = LoadDailyGrosses(emp, start, end);
+                pr.Grosses = LoadDailyGrosses(emp, ww.Start, ww.End);
 				
 				payroll.Employees.Add(pr);
 			}
@@ -65,9 +62,9 @@ namespace ica.aps.core.managers
                         if (dg.Dirty)
                         {
                             if (dg.DailyGrossID == null || dg.DailyGrossID.Equals(Guid.Empty))
-								_dgrepos.InsertDailyGross(pr.Employee, dg);
+								_dgrepos.Insert(pr.Employee, dg);
                             else
-								_dgrepos.UpdateDailyGross(pr.Employee, dg);
+								_dgrepos.Update(pr.Employee, dg);
                             dg.Dirty = false;
                         }
                     }
@@ -77,20 +74,21 @@ namespace ica.aps.core.managers
 		
         #endregion
 
+        #region Implementation
         private IEnumerable<DailyGross> LoadDailyGrosses(Employee emp, DateTime start, DateTime end)
         {
-            var list = _dgrepos.GetDailyGrosses(emp, start, end);
+            var list = _dgrepos.Get(emp, start, end);
             var grosses = new List<DailyGross>();
             for (var s = start; s <= end; s = s.AddDays(1)) 
             {
                 var gross = list.Count() > 0
-                    ? list.Where((g) => {return g.GrossDate.Year == s.Year && g.GrossDate.Month == s.Month && g.GrossDate.Day == s.Day;}).First()
+                    ? list.Where((g) => { return g.GrossTDS.Year == s.Year && g.GrossTDS.Month == s.Month && g.GrossTDS.Day == s.Day; }).First()
                     : null;
                 if (gross == null)
                 {
                     gross = new DailyGross {
-                        GrossDate = s,
-                        GrossPay = 0,
+                        GrossTDS = s,
+                        Gross = 0,
                         Modified = DateTime.Now,
                         ModifiedBy = "admin",
                         Dirty = true
@@ -101,6 +99,6 @@ namespace ica.aps.core.managers
 
             return grosses;
         }
-
+        #endregion
     }
 }
