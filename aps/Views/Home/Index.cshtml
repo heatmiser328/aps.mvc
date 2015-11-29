@@ -3,7 +3,7 @@
 <head>
     <title>Alfred's Payroll System</title>    
     <meta name="viewport" content="width=device-width" />
-    @Styles.Render("~/Content/css")
+    -@Styles.Render("~/Content/css")
 </head>
 <body ng-app="apsApp">
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -29,8 +29,21 @@
     </footer>
     -->                
     @Html.Partial("~/Views/Home/_Payroll.cshtml")    
+    <!--
     @Scripts.Render("~/bundles/angularjs")    
     @Scripts.Render("~/bundles/vendorjs")    
     @Scripts.Render("~/bundles/aps")            
+    -->
+    
+    <script src="/Scripts/angular.js"></script>
+    <script src="/Scripts/angular-ui-router.js"></script>
+    <script src="/Scripts/ui-grid.js"></script>
+    <script src="/Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+    <script src="/Scripts/lodash.js"></script>
+    <script src="/Scripts/moment.js"></script>
+    <script src="/Scripts/account/login.js"></script>
+    <script src="/Scripts/app/app.js"></script>
+    <script src="/Scripts/app/controllers/PayrollController.js"></script>
+    <script src="/Scripts/app/services/PayrollService.js"></script>
 </body>
 </html>

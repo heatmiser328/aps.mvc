@@ -13,9 +13,9 @@ namespace Mocks
             {
                 return new List<Employee>
                 {
-                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, FirstName = "Frank", LastName= "Jones", Modified=DateTime.Now, ModifiedBy="Admin", Title="Mr", Sequence=1},
-                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, FirstName = "Mary", LastName= "Smith", Modified=DateTime.Now, ModifiedBy="Admin", Title="Ms", Sequence=2},
-                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, FirstName = "Jane", LastName= "Doe", Modified=DateTime.Now, ModifiedBy="Admin", Title="Mrs", Sequence=3}
+                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, Name = "Frank", Modified=DateTime.Now, ModifiedBy="Admin", Title="Mr", Sequence=1},
+                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, Name = "Mary", Modified=DateTime.Now, ModifiedBy="Admin", Title="Ms", Sequence=2},
+                    new Employee { EmployeeID = Guid.NewGuid(), Enabled = true, Name = "Jane", Modified=DateTime.Now, ModifiedBy="Admin", Title="Mrs", Sequence=3}
                 };
             }
         }

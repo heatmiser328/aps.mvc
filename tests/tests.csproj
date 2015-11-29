@@ -80,7 +80,6 @@
     <Compile Include="repositories\EmployeeRepositoryTest.cs" />
     <Compile Include="repositories\DailyGrossRepositoryTest.cs" />
     <Compile Include="repositories\RentRepositoryTest.cs" />
-    <Content Include="aps_seed.sql" />
     <Content Include="data\aps_seed.sql" />
   </ItemGroup>
   <ItemGroup>

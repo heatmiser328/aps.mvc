@@ -16,7 +16,7 @@ namespace TestHelpers
             using (IDbConnection conn = db.Create())
             {
                 conn.Open();
-                Employee employee = conn.Query<Employee>("SELECT * FROM Employee WHERE FirstName = '" + name + "'").First();
+                Employee employee = conn.Query<Employee>("SELECT * FROM Employee WHERE Name = '" + name + "'").First();
                 employee.Rents = conn.Query<Rent>("SELECT * FROM Rent WHERE EmployeeID = @ID", new { ID = employee.EmployeeID });
                 return employee;
             }

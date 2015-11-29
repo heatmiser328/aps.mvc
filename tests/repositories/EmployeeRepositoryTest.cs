@@ -55,8 +55,7 @@ namespace Repositories
 
             var employee = employees.First();
             employee.ShouldNotBe(null);
-            employee.FirstName.ShouldBe("Tom");
-            employee.LastName.ShouldBe("Capuano");
+            employee.Name.ShouldBe("Tom");            
             employee.Title.ShouldBe("Owner");
             employee.Enabled.ShouldBe(true);
             employee.EffectiveRent().RentPct.ShouldBe(0.83M);

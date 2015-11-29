@@ -10,9 +10,7 @@ namespace ica.aps.data.models
     {
         public Guid? EmployeeID { get; set; }
         [DataMember]
-        public string FirstName { get; set; }
-        [DataMember]
-        public string LastName { get; set; }
+        public string Name { get; set; }
         [DataMember]
         public string Title { get; set; }
         public int Sequence { get; set; }
@@ -24,15 +22,6 @@ namespace ica.aps.data.models
         public DateTime Modified { get; set; }
         [DataMember]
         public string ModifiedBy { get; set; }
-
-        [DataMember]
-        public string FullName
-        {
-            get 
-            {
-                return this.FirstName + " " + this.LastName;
-            }
-        }
 
         public Rent EffectiveRent(DateTime? dt = null)
         {

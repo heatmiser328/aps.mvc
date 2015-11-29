@@ -9,19 +9,22 @@ namespace aps
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new StyleBundle("~/Content/css")
-                .Include("~/Content/bootstrap.css")
-                .Include("~/Content/site.css")
-                .Include("~/Content/ui-grid.css")
+                .Include("~/Content/bootstrap.min.css")
+                .Include("~/Content/fontawesome.min.css")                
+                .Include("~/Content/ui-grid.min.css")
+                .Include("~/Content/Site.css")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/angularjs")
-                .Include("~/Scripts/angular.js")
-                .Include("~/Scripts/angular-ui-router.js")
-                .Include("~/Scripts/ui-grid.js")
+                .Include("~/Scripts/angular.min.js")
+                .Include("~/Scripts/angular-ui-router.min.js")
+                .Include("~/Scripts/ui-grid.min.js")
+                .Include("~/Scripts/angular-ui/ui-bootstrap-tpls.min.js")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/vendorjs")
                 .Include("~/Scripts/lodash.min.js")
+                .Include("~/Scripts/moment.min.js")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/apsLogin")                          
