@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,35 @@ namespace TestHelpers
                 return employee;
             }
 
+        }
+
+        internal static IEnumerable<DailyGross> GetDailyGrosses(IDatabase db, Employee emp)
+        {
+            using (IDbConnection conn = db.Create())
+            {
+                conn.Open();                
+                var rent = conn.Query<Rent>("SELECT * FROM Rent WHERE EmployeeID = @ID", new { ID = emp.EmployeeID }).First();
+                return conn.Query<DailyGross>("SELECT * FROM DailyGross WHERE RentID = @RentID", new { RentID = rent.RentID});                
+            }
+        }
+
+        internal static IEnumerable<DailyGross> GetDailyGrosses(IDatabase db, Employee emp, DateTime start, DateTime end)
+        {
+            using (IDbConnection conn = db.Create())
+            {
+                conn.Open();
+                var rent = conn.Query<Rent>("SELECT * FROM Rent WHERE EmployeeID = @ID", new { ID = emp.EmployeeID }).First();
+                return conn.Query<DailyGross>("SELECT * FROM DailyGross WHERE RentID = @RentID AND GrossTDS between @StartTDS and @EndTDS", new { RentID = rent.RentID, StartTDS = start, EndTDS = end });
+            }
+        }
+
+        internal static DailyGross GetDailyGross(IDatabase db, Guid id)
+        {
+            using (IDbConnection conn = db.Create())
+            {
+                conn.Open();                
+                return conn.Query<DailyGross>("SELECT * FROM DailyGross WHERE DailyGrossID = @ID", new { ID = id }).FirstOrDefault();
+            }
         }
 
         internal static void ResetBlank(IDatabase db)

@@ -16,6 +16,7 @@ using ica.aps.data.repositories;
 
 namespace Repositories
 {
+    [Trait("category", "Repositories")]
     public class EmployeeRepositoryTest
     {
         private IWindsorContainer _container;

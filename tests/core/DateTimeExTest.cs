@@ -7,7 +7,8 @@ using Shouldly;
 using ica.aps.core;
 
 namespace Core
-{ 
+{
+    [Trait("category", "Core")]
     public class DateTimeExTest
     {
         public DateTimeExTest()

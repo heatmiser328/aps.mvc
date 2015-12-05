@@ -1,4 +1,4 @@
-﻿angular.module('apsApp', ['ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.edit', 'apsControllers', 'apsServices'])
+﻿angular.module('apsApp', ['ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.edit', 'ui.grid.cellNav', 'apsControllers', 'apsServices'])
 .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
     .state('payroll', {

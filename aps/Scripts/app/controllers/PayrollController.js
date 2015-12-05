@@ -1,17 +1,15 @@
 ﻿angular.module('apsControllers', [])
 .controller('PayrollCtrl', ['$scope', '$log', '$filter', 'PayrollService', function ($scope, $log, $filter, PayrollService) {
     $log.info('Loading payroll controller');
-    $scope.gridOptions = {};
-    $scope.gridOptions.onRegisterApi = function (gridApi) {
-        //set gridApi on scope
-        $scope.gridApi = gridApi;
-        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-            $log.debug('edited row id:' + rowEntity.id + ' Column:' + colDef.name + ' newValue:' + newValue + ' oldValue:' + oldValue);
-            $log.debug(rowEntity);
-            //$scope.$apply();
-        });
-    };    
-    
+    var payroll = null;    
+    $scope.payrollvm = [];
+    $scope.gridOptions = {
+        data: 'payrollvm',
+        enableCellSelection: true,
+        enableRowSelection: false,
+        enableCellEditOnFocus: true        
+    };
+
     $scope.dt = new Date();
     $scope.payrollDate = '';
     $scope.minDate = moment($scope.dt).add(-5, 'y');
@@ -36,14 +34,10 @@
         var year = weekYear[0];
         var week = weekYear[1];
         if (angular.isDefined(week) && angular.isDefined(year)) {
-            var weekPeriod = getStartDateOfWeek(week, year);
-
-            /*
-            var weekStart = $filter('date')(weekPeriod[0], 'MMM dd, yyyy');
-            var weekEnd = $filter('date')(weekPeriod[1], 'MMM dd, yyyy');
-
-            $scope.payrollDate = weekStart + " to " + weekEnd;
-            */
+            var weekPeriod = getStartDateOfWeek(week, year);            
+            //var weekStart = $filter('date')(weekPeriod[0], 'MMM dd, yyyy');
+            //var weekEnd = $filter('date')(weekPeriod[1], 'MMM dd, yyyy');
+            //$scope.payrollDate = weekStart + " to " + weekEnd;            
             var d = weekPeriod[0];
             d.setDate(d.getDate() + 1);
             $scope.payrollDate = 'Week of ' + $filter('date')(d, 'MMM dd, yyyy');
@@ -87,13 +81,14 @@
         .then(function (data) {
             $log.debug('retrieved payroll');
             $log.debug(data);
+            payroll = data;
             
             $scope.gridOptions.columnDefs = [
                { name: 'id', enableCellEdit: false, visible: false},
                { name: 'name', enableCellEdit: false }
             ];
             
-            var payroll = _.map(data.Employees, function (emp, j) {
+            var payrollvm = _.map(data.Employees, function (emp, j) {
                 var o = {
                     id: j,
                     name: emp.Employee.Name,
@@ -102,7 +97,7 @@
                     if (j == 0) {
 
                         var s = $filter('date')(g.GrossTDS, 'EEEE') + ' ' + $filter('date')(g.GrossTDS, 'MMM-dd');
-                        $scope.gridOptions.columnDefs.push({ name: i.toString(), displayName: s, enableCellEdit: true, type: 'number' });
+                        $scope.gridOptions.columnDefs.push({ name: i.toString(), displayName: s, enableCellEdit: true, type: 'number', cellFilter: 'currency' });
                     }
                     o[i.toString()] = g.Gross;
                 });
@@ -112,17 +107,52 @@
 
                 return o;
             });
-            $scope.gridOptions.columnDefs.push({ name: 'gross', enableCellEdit: false, type: 'number' });
-            $scope.gridOptions.columnDefs.push({ name: 'net', enableCellEdit: false, type: 'number' });
-            $scope.gridOptions.columnDefs.push({ name: 'rent', enableCellEdit: false, type: 'number' });
+            $scope.gridOptions.columnDefs.push({ name: 'gross', enableCellEdit: false, type: 'number', cellFilter: 'currency' });
+            $scope.gridOptions.columnDefs.push({ name: 'net', enableCellEdit: false, type: 'number', cellFilter: 'currency' });
+            $scope.gridOptions.columnDefs.push({ name: 'rent', enableCellEdit: false, type: 'number', cellFilter: 'currency' });
 
             $log.debug($scope.gridOptions);
-
-            $scope.gridOptions.data = payroll;            
+            $scope.payrollvm = payrollvm;
         })
         .catch(function (resp) {
             $log.error(resp.status + ' ' + resp.statusText);
-        });
-    }       
+        });        
+    }
+
+    function onGrossPayChanged(rowEntity, colDef, newValue, oldValue) {
+        //$log.debug('edited row id:' + rowEntity.id + ' Column:' + colDef.name + ' newValue:' + newValue + ' oldValue:' + oldValue);
+        //$log.debug(rowEntity);
+        //$log.debug(colDef);
+        if (newValue !== oldValue && payroll) {
+            var employee = payroll.Employees[rowEntity.id];
+            $log.debug('Update for ' + employee.Employee.Name);
+            PayrollService.setDailyGross(employee, colDef.name, newValue);
+            employee.Gross = PayrollService.calculateGross(employee);
+            employee.Rent = PayrollService.calculateRent(employee);
+            employee.Net = PayrollService.calculateNet(employee);
+            PayrollService.save(payroll)
+            .then(function () {
+                rowEntity.gross = employee.Gross;
+                rowEntity.rent = employee.Rent;
+                rowEntity.net = employee.Net;
+                //$scope.$apply();
+            })
+            .catch(function (resp) {
+                // restore the old value
+                employee.Grosses[colDef.name] = oldValue;
+                employee.Gross = PayrollService.calculateGross(employee);
+                employee.Rent = PayrollService.calculateRent(employee);
+                employee.Net = PayrollService.calculateNet(employee);
+
+                $log.error(resp.status + ' ' + resp.statusText);
+            });
+        }
+    }
+
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        //set gridApi on scope
+        $scope.gridApi = gridApi;
+        gridApi.edit.on.afterCellEdit($scope, onGrossPayChanged);
+    };
 }]);
 

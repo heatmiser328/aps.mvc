@@ -9,10 +9,11 @@ using ica.aps.data.db;
 
 namespace Data
 {
+    [Trait("category", "Database")]
     public class DataTest
     {
         private const string _provider = "System.Data.SqlClient";
-        private const string _connstring = "Data Source=dev-s01;Initial Catalog=aps;User ID=sa;Password=sql@dm1n";
+        private const string _connstring = "Data Source=dev-s01;Initial Catalog=master;User ID=sa;Password=sql@dm1n";
 		
         [Fact]        
         public void Instantiate()
@@ -48,7 +49,7 @@ namespace Data
 	                cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES";
 					var count = cmd.ExecuteScalar();
                     count.ShouldBeAssignableTo<int>();
-                    count.ShouldBe(3);
+                    count.ShouldNotBe(0);
 	            }
 			}
         }

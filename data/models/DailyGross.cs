@@ -13,7 +13,7 @@ namespace ica.aps.data.models
         [DataMember]
         public decimal Gross { get; set; }
         [DataMember]
-        public DateTime Modified { get; set; }
+        public DateTime ModifiedTDS { get; set; }
         [DataMember]
         public string ModifiedBy { get; set; }
         [DataMember]

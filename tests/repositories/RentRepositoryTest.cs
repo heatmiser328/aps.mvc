@@ -15,7 +15,8 @@ using ica.aps.data.repositories;
 //using ica.aps.tests.mocks;
 
 namespace Repositories
-{ 
+{
+    [Trait("category", "Repositories")]    
     public class RentRepositoryTest
     {
         private IWindsorContainer _container;

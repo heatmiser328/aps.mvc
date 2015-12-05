@@ -32,23 +32,15 @@ namespace ica.aps.data.repositories
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
-                /*
-	            using (IDbCommand cmd = conn.CreateCommand())
-	            {
-					dg.ID = Guid.NewGuid();
-					IRent r = employee.EffectiveRent(dg.GrossDate);
-					
-	                cmd.CommandText = cInsertDailyGrossForEmployee_SQL;
-	                base.AddCommandParameter(cmd, "@DailyGrossID", DbType.Guid, ParameterDirection.Input, dg.ID);
-	                base.AddCommandParameter(cmd, "@RentID", DbType.Guid, ParameterDirection.Input, r.ID);
-	                base.AddCommandParameter(cmd, "@Gross", DbType.Decimal, ParameterDirection.Input, dg.GrossPay);
-	                base.AddCommandParameter(cmd, "@GrossTDS", DbType.DateTime, ParameterDirection.Input, dg.GrossDate);
-	                base.AddCommandParameter(cmd, "@ModifiedBy", DbType.String, ParameterDirection.Input, dg.ModifiedBy);
-	                base.AddCommandParameter(cmd, "@ModifiedTDS", DbType.DateTime, ParameterDirection.Input, dg.Modified);
-						
-					cmd.ExecuteNonQuery();
-	            }
-                */ 
+                dg.DailyGrossID = Guid.NewGuid();                
+                conn.Execute(cInsertDailyGrossForEmployee_SQL, new {
+	                DailyGrossID=dg.DailyGrossID,
+	                RentID=employee.EffectiveRent(dg.GrossTDS).RentID,
+	                Gross=dg.Gross,
+	                GrossTDS=dg.GrossTDS,
+	                ModifiedBy=dg.ModifiedBy,
+	                ModifiedTDS=dg.ModifiedTDS
+                });
 			}
         }
 	
@@ -56,22 +48,14 @@ namespace ica.aps.data.repositories
         {
 			/*using (*/IDbConnection conn = this.Connection;//)
 			{
-                /*
-	            using (IDbCommand cmd = conn.CreateCommand())
-	            {
-					IRent r = employee.EffectiveRent(dg.GrossDate);
-					
-	                cmd.CommandText = cUpdateDailyGrossForEmployee_SQL;
-	                base.AddCommandParameter(cmd, "@DailyGrossID", DbType.Guid, ParameterDirection.Input, dg.ID);
-	                base.AddCommandParameter(cmd, "@RentID", DbType.Guid, ParameterDirection.Input, r.ID);
-	                base.AddCommandParameter(cmd, "@Gross", DbType.Decimal, ParameterDirection.Input, dg.GrossPay);
-	                base.AddCommandParameter(cmd, "@GrossTDS", DbType.DateTime, ParameterDirection.Input, dg.GrossDate);
-	                base.AddCommandParameter(cmd, "@ModifiedBy", DbType.String, ParameterDirection.Input, dg.ModifiedBy);
-	                base.AddCommandParameter(cmd, "@ModifiedTDS", DbType.DateTime, ParameterDirection.Input, dg.Modified);
-						
-					cmd.ExecuteNonQuery();
-	            }
-                */ 
+                conn.Execute(cUpdateDailyGrossForEmployee_SQL, new {
+                    DailyGrossID = dg.DailyGrossID,
+                    RentID = employee.EffectiveRent(dg.GrossTDS).RentID,
+                    Gross = dg.Gross,
+                    GrossTDS = dg.GrossTDS,
+                    ModifiedBy = dg.ModifiedBy,
+                    ModifiedTDS = dg.ModifiedTDS
+                });
 			}
         }
         #endregion

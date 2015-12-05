@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 
 using ica.aps.core.interfaces;
+using ica.aps.data.models;
 
 
 namespace ica.aps.api.Controllers
@@ -43,17 +44,29 @@ namespace ica.aps.api.Controllers
             }
         }
 
-        // GET api/payroll/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/payroll
-        public void Post([FromBody]string value)
+        [HttpPost]
+        public HttpResponseMessage Post([FromBody]Payroll payroll)
         {
+            try
+            {
+                _mgr.SavePayroll(payroll);
+                return Request.CreateResponse(HttpStatusCode.OK, payroll, "application/json");
+            }
+            catch (Exception ex)
+            {
+                // introduce a logging system...
+                throw new HttpResponseException(
+                    new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent("Error saving Payroll" + System.Environment.NewLine + ex.Message),
+                        ReasonPhrase = ex.Message.Replace(System.Environment.NewLine, string.Empty)
+                    }
+                );
+            }
         }
 
+        /*
         // PUT api/payroll/5
         public void Put(int id, [FromBody]string value)
         {
@@ -63,5 +76,6 @@ namespace ica.aps.api.Controllers
         public void Delete(int id)
         {
         }
+        */ 
     }
 }

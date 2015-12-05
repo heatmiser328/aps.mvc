@@ -82,14 +82,14 @@ namespace ica.aps.core.managers
             for (var s = start; s <= end; s = s.AddDays(1)) 
             {
                 var gross = list.Count() > 0
-                    ? list.Where((g) => { return g.GrossTDS.Year == s.Year && g.GrossTDS.Month == s.Month && g.GrossTDS.Day == s.Day; }).First()
+                    ? list.Where((g) => { return g.GrossTDS.Year == s.Year && g.GrossTDS.Month == s.Month && g.GrossTDS.Day == s.Day; }).FirstOrDefault()
                     : null;
                 if (gross == null)
                 {
                     gross = new DailyGross {
                         GrossTDS = s,
                         Gross = 0,
-                        Modified = DateTime.Now,
+                        ModifiedTDS = DateTime.Now,
                         ModifiedBy = "admin",
                         Dirty = true
                     };
