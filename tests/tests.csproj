@@ -47,6 +47,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NSpec, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\nspec.1.0.1\lib\NSpec.dll</HintPath>
+    </Reference>
+    <Reference Include="NSpecAdapterForXunit">
+      <HintPath>..\packages\NSpecAdapterForXunit.0.1.1.1\lib\net40\NSpecAdapterForXunit.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.8.2.0\lib\net45\NSubstitute.dll</HintPath>
     </Reference>
@@ -88,10 +95,12 @@
   <ItemGroup>
     <Content Include="api\EmployeeTest.cs" />
     <Compile Include="api\PayrollControllerTest.cs" />
+    <Compile Include="core\DateTimeExSpec.cs" />
     <Compile Include="core\PayrollManagerTest.cs" />
     <Compile Include="core\DateTimeExTest.cs" />
     <Compile Include="database\DatabaseTest.cs" />
     <Compile Include="data\TestData.cs" />
+    <Compile Include="DebuggerShim.cs" />
     <Compile Include="helpers\Data.cs" />
     <Compile Include="helpers\Paths.cs" />
     <Compile Include="mocks\MockData.cs" />
