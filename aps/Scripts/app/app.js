@@ -1,4 +1,5 @@
 ﻿angular.module('apsApp', ['ui.router', 'ui.bootstrap', 'ui.grid', 'ui.grid.edit', 'ui.grid.cellNav', 'apsControllers', 'apsServices'])
+.value('apiURL', 'http://localhost:52897/api')
 .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
     .state('payroll', {

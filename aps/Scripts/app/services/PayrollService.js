@@ -1,11 +1,11 @@
 ﻿angular.module('apsServices', [])
-.factory('PayrollService', ['$log', '$http', '$q', function ($log, $http, $q) {
+.factory('PayrollService', ['$log', '$http', '$q', 'apiURL', function ($log, $http, $q, apiURL) {
     $log.info('Loading payroll service');    
 
     function fetch(date) {        
         $log.debug('retrieve payroll for ' + date);
         var deferred = $q.defer();
-        $http.get('http://localhost:52897/api/payroll/start/' + date)
+        $http.get(apiURL + '/payroll/start/' + date)
         .then(function (resp) {
             var payroll = [];
             $log.debug('retrieved payroll');
@@ -22,22 +22,16 @@
 
     function save(payroll) {
         $log.debug('save payroll for ' + payroll.StartTDS);
-        var deferred = $q.defer();
-        /*
-        $http.post('http://localhost:52897/api/payroll')
-        .then(function (resp) {
-            var payroll = [];
-            $log.debug('retrieved payroll');
+        var deferred = $q.defer();        
+        $http.post(apiURL + '/payroll', payroll)
+        .then(function (resp) {            
+            $log.debug('saved payroll');
             $log.debug(resp);
-            payroll = resp.data;
-
-            deferred.resolve(payroll);
+            deferred.resolve(resp);
         },
         function (resp) {
             deferred.reject(resp);
         });
-        */
-        deferred.resolve(true);
         return deferred.promise;
     }
     function setDailyGross(employee, idx, newValue) {

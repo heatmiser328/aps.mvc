@@ -7,6 +7,7 @@ namespace ica.aps.data.models
     [DataContract]
     public class DailyGross
     {
+        [DataMember]
         public Guid? DailyGrossID { get; set; }        
         [DataMember]
         public DateTime GrossTDS { get; set; }

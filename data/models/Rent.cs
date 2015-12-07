@@ -6,6 +6,7 @@ namespace ica.aps.data.models
     [DataContract]
     public class Rent
     {
+        [DataMember]
         public Guid? RentID { get; set; }
         [DataMember]
         public decimal RentPct { get; set; }

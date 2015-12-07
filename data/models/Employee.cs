@@ -8,6 +8,7 @@ namespace ica.aps.data.models
     [DataContract]
     public class Employee
     {
+        [DataMember]
         public Guid? EmployeeID { get; set; }
         [DataMember]
         public string Name { get; set; }
@@ -25,21 +26,28 @@ namespace ica.aps.data.models
 
         public Rent EffectiveRent(DateTime? dt = null)
         {
-            if (this.Rents == null || this.Rents.Count() < 1) 
-                return null;
+            try
+            {
+                if (this.Rents == null || this.Rents.Count() < 1)
+                    return new Rent { RentPct = 0 };
 
-            if (dt == null || !dt.HasValue)            
-                dt = DateTime.Now;
-            
-            var rent =
-                from r in this.Rents
-                where r.EffectiveTDS <= dt
-                orderby r.EffectiveTDS descending
-                select r;
+                if (dt == null || !dt.HasValue)
+                    dt = DateTime.Now;
 
-            if (rent != null) 
-                return rent.First();
-            return this.Rents.First();
+                var rent =
+                    from r in this.Rents
+                    where r.EffectiveTDS <= dt
+                    orderby r.EffectiveTDS descending
+                    select r;
+
+                if (rent != null)
+                    return rent.First();
+                return this.Rents.First();
+            }
+            catch
+            {
+                return this.Rents.First();
+            }
         }
     }
 }
